@@ -1,0 +1,20 @@
+﻿@model GeoService.Web.Data.ViewModels.CreateCategoryViewModel
+
+<container>
+    <div class="card">
+        <div class="card-body">
+            <form asp-controller="Categories" asp-action="CreateCategory" method="post">
+                <div class="row">
+                    <div class="col-6">
+                        <div>
+                          <label for="defaultFormControlInput" class="form-label">Nazwa</label>
+                          <input asp-for="Name" type="text" class="form-control" id="defaultFormControlInput" placeholder="Nazwa kategorii" aria-describedby="defaultFormControlHelp" />
+                          <span asp-validation-for="Name" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-info" style="margin-top:20px">Dodaj kategorię</button>
+            </form>
+        </div>
+    </div>
+</container>

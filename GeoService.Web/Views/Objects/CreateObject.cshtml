@@ -1,0 +1,71 @@
+﻿@model GeoService.Web.Data.ViewModels.CreateObjectViewModel
+
+<container>
+    <div class="card">
+        <div class="card-body">
+            <form asp-controller="Objects" asp-action="CreateObject" method="post">
+                <div class="row" style="margin-top:10px">
+                    <div class="col-6">
+                        <div>
+                          <label for="defaultFormControlInput" class="form-label">Szerokość</label>
+                          <input asp-for="Latitude" type="text" class="form-control" id="defaultFormControlInput" placeholder="50.1387126312" aria-describedby="defaultFormControlHelp" />
+                          <span asp-validation-for="Latitude" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div>
+                          <label for="defaultFormControlInput" class="form-label">Długość</label>
+                          <input asp-for="Longitude" type="text" class="form-control" id="defaultFormControlInput" placeholder="20.1387126312" aria-describedby="defaultFormControlHelp" />
+                          <span asp-validation-for="Longitude" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row g-3" style="margin-top:10px">
+                    <div class="col-md-12">
+                        <label class="form-label" for="collapsible-name">Kod PKD</label><br />
+                        <select asp-for="PKDCodeId" id="pkd-codes-select" class="select2 form-select form-select-md" data-allow-clear="true" asp-items="@Model.PKDCodes">
+                            <option value=""></option>
+                        </select>
+                        <span asp-validation-for="PKDCodeId"></span>
+                    </div>
+                </div>
+                <div class="row g-3" style="margin-top:10px">
+                    <div class="col-6">
+                        <div>
+                          <label for="defaultFormControlInput" class="form-label">Nazwa</label>
+                          <input asp-for="Name" type="text" class="form-control" id="defaultFormControlInput" placeholder="Nazwa obiektu" aria-describedby="defaultFormControlHelp" />
+                          <span asp-validation-for="Name" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label" for="collapsible-name">Kategoria</label><br />
+                        <select asp-for="CategoryId" id="categories-select" class="select2 form-select form-select-md" data-allow-clear="true" asp-items="@Model.Categories">
+                            <option value=""></option>
+                        </select>
+                        <span asp-validation-for="CategoryId"></span>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-info" style="margin-top:30px">Dodaj obiekt</button>
+            </form>
+        </div>
+    </div>
+</container>
+
+@section scripts
+{
+    <script>
+        $(document).ready(function() {
+            $("#categories-select").select2(
+            {
+                placeholder: 'Kategoria',
+                allowClear: true
+            });
+
+            $("#pkd-codes-select").select2(
+            {
+                placeholder: 'Kod PKD',
+                allowClear: true
+            });
+        });
+    </script>
+}

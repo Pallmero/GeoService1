@@ -1,0 +1,56 @@
+﻿@model GeoService.Web.Data.ViewModels.ObjectsViewModel
+
+<container>
+   <div class="card">
+      @if (Model.Objects is null || Model.Objects.Count <= 0)
+      {
+          <h5 class="card-header" style="text-align:center">Nie dodano żadnego obiektu</h5>
+          <div class="text-center">
+             <a asp-controller="Objects" asp-action="CreateObject" class="btn btn-info" style="margin-bottom:20px">Dodaj obiekt</a>
+          </div>
+      }
+      else
+      {
+        <div class="table-responsive text-nowrap">
+           <h5 class="card-header" style="display:inline-block">
+                <a asp-controller="Objects" asp-action="CreateObject" class="btn btn-info" style="display:inline-block">Dodaj obiekt</a>
+           </h5>
+           <table class="table table-bordered">
+              <thead>
+                 <tr>
+                    <th class="fw-bold">Id</th>
+                    <th class="fw-bold">Nazwa</th>
+                    <th class="fw-bold">Szerokość</th>
+                    <th class="fw-bold">Długość</th>
+                    <th style="width: 3%; text-align:center" class="fw-bold">Kategoria</th>
+                    <th style="width: 3%; text-align:center" class="fw-bold">Sekcja</th>
+                    <th style="width: 3%; text-align:center" class="fw-bold">Kod PKD</th>
+                    <th class="fw-bold">Edytuj</th>
+                 </tr>
+              </thead>
+              @{
+                  var i = 1;
+                  foreach (var objectItem in Model.Objects)
+                  {
+                      <tbody class="table-border-bottom-0">
+                         <tr>
+                            <td style="width: 3%; text-align:center">@i</td>
+                            <td>@objectItem?.Name</td>
+                            <td>@objectItem?.Latitude</td>
+                            <td>@objectItem?.Longitude</td>
+                            <td style="width: 3%; text-align:center">@objectItem?.Category?.Name</td>
+                            <td style="width: 3%; text-align:center">@objectItem?.PKDCode?.Section?.Symbol</td>
+                            <td style="width: 3%; text-align:center">@objectItem?.PKDCode?.PKDSymbol</td>
+                            <td style="width: 3%; text-align:center">
+                                <a asp-controller="Objects" asp-action="UpdateObject" asp-route-id="@objectItem.Id"><i class='bx bx-edit-alt'></i></a>
+                            </td>
+                         </tr>
+                      </tbody>
+                      i++;
+                  }
+              }
+           </table>
+        </div>
+      }
+   </div>
+</container>

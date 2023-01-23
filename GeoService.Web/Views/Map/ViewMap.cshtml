@@ -1,0 +1,171 @@
+﻿@model GeoService.Web.Data.ViewModels.MapViewModel
+@{
+    ViewData["Title"] = "";
+}
+
+<style type="text/css">
+    #map {
+        height: 550px;
+        width: 100%;
+    }
+</style>
+
+<script src="https://maps.googleapis.com/maps/api/js?key=&callback=initMap&libraries=&v=weekly" async></script>
+
+<script>
+    function initMap() {
+
+    // Markers locations
+    var locations = @Html.Raw(Json.Serialize(Model.Objects));
+    // Starting location
+    const center = {
+            lat: 52.17872797961584,
+            lng: 21.047392114670167
+    };
+
+    // Removing POI
+    var myStyles = [{
+        featureType: "poi",
+        elementType: "labels",
+        stylers: [{
+            visibility: "off"
+        }]
+    }];
+
+    // Generating map
+    const map = new google.maps.Map(document.getElementById("map"), {
+        zoom: 8,
+        center: center,
+        styles: myStyles
+    });
+
+    // Generating markers
+    var infowindow = new google.maps.InfoWindow();
+
+    var marker, i;
+    for (i = 0; i < locations.length; i++) {
+        marker = new google.maps.Marker({
+            position: new google.maps.LatLng(locations[i].latitude, locations[i].longitude),
+            map: map,
+            optimized: true
+        });
+
+        google.maps.event.addListener(marker, 'click', (function(marker, i) {
+
+            return function() {
+                console.log(this.position.lat());
+                $("#collapse-latitiude").val(marker.position.lat); 
+                $("#collapse-longitude").val(marker.position.lng);
+                infowindow.setContent(locations[i].name + locations[1].categoryName);
+                infowindow.open(map, marker);
+            }
+
+        })(marker, i));
+    }
+
+    map.addListener("click", (mapsMouseEvent) => {
+        var coordinates = mapsMouseEvent.latLng.toJSON();
+        $("#collapse-latitiude").val(coordinates.lat); 
+        $("#collapse-longitude").val(coordinates.lng);
+    });
+}
+</script>
+
+<container>
+   <div>
+      <form asp-controller="Map" asp-action="CreateObjectFromMapView" method="post">
+         <div class="accordion" id="collapsibleSection">
+            <div class="card accordion-item">
+               <h2 class="accordion-header" id="headingDeliveryAddress">
+                  <button type="button" class="accordion-button" data-bs-toggle="collapse" data-bs-target="#collapseDeliveryAddress" aria-expanded="true" aria-controls="collapseDeliveryAddress"> Dodaj obiekt <span class="text-muted">&nbsp&nbsp&nbsp&nbsp(kliknij gdziekolwiek na mapie aby pobrać współrzędne)</span> </button>
+               </h2>
+               <div id="collapseDeliveryAddress" class="accordion-collapse collapse" data-bs-parent="#collapsibleSection">
+                  <div class="accordion-body">
+                     <div class="row g-3">
+                        <div class="col-md-6">
+                           <label class="form-label" for="collapsible-fullname">Szerokość</label>
+                           <input asp-for="Latitude" id="collapse-latitiude" class="form-control" placeholder="20.1387126312"/>
+                        </div>
+                        <div class="col-md-6">
+                           <label class="form-label" for="collapsible-fullname">Długość</label>
+                           <input asp-for="Longitude" id="collapse-longitude" class="form-control" placeholder="50.1387126312"/>
+                        </div>
+                     </div>
+                     <div class="row g-3">
+                        <div class="col-md-12" style="margin-top:30px">
+                           <label class="form-label" for="collapsible-name">Kod PKD</label><br />
+                            <select asp-for="PKDCodeId" id="pkd-codes-select" class="select2 form-select form-select-lg" data-allow-clear="true" asp-items="@Model.PKDCodes">
+                                <option value=""></option>
+                            </select>
+                        </div>
+                     </div>
+                     <div class="row g-3">
+                        <div class="col-md-6" style="margin-top:30px">
+                           <label class="form-label" for="collapsible-name">Nazwa</label>
+                           <input asp-for="Name" type="text" id="collapse-name" class="form-control" placeholder="Nazwa" />
+                        </div>
+                        <div class="col-md-6" style="margin-top:30px">
+                           <label class="form-label" for="collapsible-name">Kategoria</label><br />
+                            <select asp-for="CategoryId" id="categories-select" class="select2 form-select form-select-lg" data-allow-clear="true" asp-items="@Model.Categories">
+                                <option value=""></option>
+                            </select>
+                        </div>
+                     </div>
+                     <div class="row g-3">
+                         <div class="col-md-6" style="margin-top:50px">
+                            <button type="submit" class="btn btn-outline-danger" style="margin-right:10px">Usuń obiekt</button>
+                            <button type="submit" class="btn btn-info" style="">Dodaj obiekt</button>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </form>
+   </div>
+   <div class="text-center">
+      <div style="margin-top:10px" id="map"></div>
+   </div>
+   <div style="margin-top:10px" class="card">
+    <div class="card-body">
+        <form asp-controller="Map" asp-action="ViewMap" method="post">
+           <div class="row g-3">
+              <div class="col-md-4" style="margin-top:20px">
+                 <select asp-for="CategoryFilterId" id="categories-filter-select" class="select2 form-select form-select-lg" data-allow-clear="true" asp-items="@Model.Categories">
+                    <option value=""></option>
+                 </select>
+                 <span asp-validation-for="CategoryFilterId"></span>
+              </div>
+              <div class="col-md-4" style="margin-top:20px">
+                 <button type="submit" class="btn btn-outline-primary" style="">Filtruj</button>
+              </div>
+           </div>
+        </form>
+    </div>
+   </div>
+</container>
+
+@section scripts
+{
+    <script>
+        $(document).ready(function() {
+            $("#categories-select").select2(
+            {
+                placeholder: 'Kategoria',
+                allowClear: true
+            });
+
+            $("#categories-filter-select").select2(
+            {
+                placeholder: 'Kategoria',
+                allowClear: true
+            });
+
+            $("#pkd-codes-select").select2(
+            {
+                placeholder: 'Kod PKD',
+                allowClear: true
+            });
+        });
+    </script>
+}

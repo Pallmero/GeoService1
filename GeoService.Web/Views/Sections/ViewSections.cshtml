@@ -1,0 +1,44 @@
+﻿@model GeoService.Web.Data.ViewModels.SectionsViewModel
+
+<container>
+   <div class="card">
+      @if (Model.Sections is null || Model.Sections.Count <= 0)
+      {
+          <h5 class="card-header" style="text-align:center">Nie dodano żadnej sekcji</h5>
+          @*<div class="text-center">
+             <a asp-controller="Categories" asp-action="CreateCategory" class="btn btn-info" style="margin-bottom:20px">Dodaj sekcję</a>
+          </div>*@
+      }
+      else
+      {
+        <div class="table-responsive text-nowrap">
+           @*<h5 class="card-header" style="display:inline-block">
+                <a asp-controller="Categories" asp-action="CreateCategory" class="btn btn-info" style="display:inline-block">Dodaj sekcję</a>
+           </h5>*@
+           <table class="table table-bordered">
+              <thead>
+                 <tr>
+                    <th style="width: 3%; text-align:center" class="fw-bold">Id</th>
+                    <th style="width: 3%" class="fw-bold">Symbol</th>
+                    <th class="fw-bold">Opis</th>
+                 </tr>
+              </thead>
+              @{ 
+                  var i = 1; 
+                  foreach (var sectionItem in Model.Sections)
+                  {
+                      <tbody class="table-border-bottom-0">
+                         <tr>
+                            <td style="width: 3%; text-align:center">@i</td>
+                            <td style="width: 3%; text-align:center">@sectionItem?.Symbol</td>
+                            <td>@sectionItem?.Description</td>
+                         </tr>
+                      </tbody>
+                      i++;
+                  }
+              }
+           </table>
+        </div>
+      }
+   </div>
+</container>

@@ -1,0 +1,102 @@
+﻿@model GeoService.Web.Controllers.StatisticsController.StatisticsViewModel
+
+<container>
+    <div class="card">
+        <div class="card-header">
+            <h4>Podział na kategorie</h4>
+        </div>
+        <div class="card-body">
+            <div id="donutChart"></div>
+        </div>
+    </div>
+    <div class="card" style="margin-top:60px">
+        <div class="card-header">
+            <h4>Podział na sekcje</h4>
+        </div>
+        <div class="card-body">
+            <div id="horizontalBarChart"></div>
+        </div>
+    </div>
+</container>
+
+@section scripts {
+    <script>
+        var names = @Html.Raw(Json.Serialize(Model.Labels));
+        var percentage = @Html.Raw(Json.Serialize(Model.Series));
+        var colours = @Html.Raw(Json.Serialize(Model.Colours));
+        const donutChartEl = document.querySelector('#donutChart');
+        const donutChartConfig = {
+          chart: {
+            height:580,
+            type: 'donut'
+          },
+          labels: names,
+          series: percentage,
+          colors: colours,
+          stroke: {
+            show: false,
+            curve: 'straight'
+          },
+          dataLabels: {
+            enabled: true,
+            formatter: function(val, opt) {
+              return parseInt(val) + '%';
+            }
+          },
+          legend: {
+            show: true,
+            position: 'bottom'
+          }
+        };
+        if (typeof donutChartEl !== undefined && donutChartEl !== null) {
+          const donutChart = new ApexCharts(donutChartEl, donutChartConfig);
+          donutChart.render();
+        }
+
+        const horizontalBarChartEl = document.querySelector('#horizontalBarChart');
+        const horizontalBarChartConfig = {
+          chart: {
+            height: 600,
+            type: 'bar',
+            toolbar: {
+              show: false
+            }
+          },
+          plotOptions: {
+            bar: {
+              horizontal: true,
+              barHeight: '30%',
+              borderRadius: 8
+            }
+          },
+          grid: {
+            xaxis: {
+              lines: {
+                show: true
+              }
+            },
+            padding: {
+              top: -20,
+              bottom: -12
+            }
+          },
+          colors: config.colors.info,
+          dataLabels: {
+            enabled: false
+          },
+          series: [
+            {
+              name: "",
+              data: @Html.Raw(Json.Serialize(Model.Data))
+            }
+          ],
+          xaxis: {
+            categories: @Html.Raw(Json.Serialize(Model.Sections))
+          }
+        };
+        if (typeof horizontalBarChartEl !== undefined && horizontalBarChartEl !== null) {
+          const horizontalBarChart = new ApexCharts(horizontalBarChartEl, horizontalBarChartConfig);
+          horizontalBarChart.render();
+        }
+    </script>
+}

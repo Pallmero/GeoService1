@@ -1,0 +1,22 @@
+﻿@model GeoService.Web.Data.ViewModels.UpdateCategoryViewModel
+
+<container>
+    <div class="card">
+        <div class="card-body">
+            <form asp-controller="Categories" asp-action="UpdateCategory" method="post">
+                <div class="row">
+                    <div class="col-6">
+                        <input hidden asp-for="Id" />
+                        <div>
+                          <label for="defaultFormControlInput" class="form-label">Nazwa</label>
+                          <input asp-for="Name" type="text" class="form-control" id="defaultFormControlInput" placeholder="Nazwa kategorii" aria-describedby="defaultFormControlHelp" />
+                          <span asp-validation-for="Name" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+                <button asp-controller="Categories" asp-action="DeleteCategory" asp-route-id="@Model.Id" class="btn btn-outline-danger" style="margin-top:30px; margin-right:10px">Usuń kategorię</button>
+                <button type="submit" class="btn btn-info" style="margin-top:30px">Zaktualizuj kategorię</button>
+            </form>
+        </div>
+    </div>
+</container>

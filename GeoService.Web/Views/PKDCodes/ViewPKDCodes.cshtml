@@ -1,0 +1,52 @@
+﻿@model GeoService.Web.Data.ViewModels.PKDCodesViewModel
+
+<container>
+   <div class="card">
+      @if (Model.PKDCodes is null || Model.PKDCodes.Count <= 0)
+      {
+          <h5 class="card-header" style="text-align:center">Nie dodano żadnego kodu PKD</h5>
+          @*<div class="text-center">
+             <a asp-controller="Categories" asp-action="CreateCategory" class="btn btn-info" style="margin-bottom:20px">Dodaj sekcję</a>
+          </div>*@
+      }
+      else
+      {
+        <div class="table-responsive text-nowrap">
+           @*<h5 class="card-header" style="display:inline-block">
+                <a asp-controller="Categories" asp-action="CreateCategory" class="btn btn-info" style="display:inline-block">Dodaj sekcję</a>
+           </h5>*@
+           <table class="table table-bordered">
+              <thead>
+                 <tr>
+                    <th style="width: 3%; text-align:center" class="fw-bold">Id</th>
+                    <th style="width: 3%" class="fw-bold">Sekcja</th>
+                    <th class="fw-bold">Dział</th>
+                    <th class="fw-bold">Grupa</th>
+                    <th class="fw-bold">Klasa</th>
+                    <th class="fw-bold">Symbol PKD</th>
+                    <th class="fw-bold">Opis</th>
+                 </tr>
+              </thead>
+              @{ 
+                  var i = 1; 
+                  foreach (var code in Model.PKDCodes)
+                  {
+                      <tbody class="table-border-bottom-0">
+                         <tr>
+                            <td style="width: 3%; text-align:center">@i</td>
+                            <td style="width: 3%; text-align:center">@code?.Section?.Symbol</td>
+                            <td style="width: 3%; text-align:center">@code?.Department</td>
+                            <td>@code?.Group</td>
+                            <td style="width: 3%; text-align:center">@code?.Class</td>
+                            <td>@code?.PKDSymbol</td>
+                            <td>@code?.Description</td>
+                         </tr>
+                      </tbody>
+                      i++;
+                  }
+              }
+           </table>
+        </div>
+      }
+   </div>
+</container>
